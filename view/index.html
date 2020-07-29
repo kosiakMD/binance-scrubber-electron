@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+      const remote = require('electron').remote;
+      const { __DEV__, VERSION } = remote.getGlobal('ENV');
+    </script>
+    <meta charset="UTF-8">
+    <title>Binance Scrubber!</title>
+    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';"/>
+    <style>
+        body {
+            background: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<section style="padding: 10px;">
+    <h1>Hello, it's Binance Scrubber!</h1>
+
+    <button type="button" id="update" style="margin: 0 20px 0 0;">Update</button>
+    <span>Found: <span id="count"></span></span>
+    <br/>
+    <br/>
+    <span>Status: <span id="status"></span></span>
+    <p>
+        <button type="button" id="download" style="visibility: hidden">Download</button>
+    </p>
+</section>
+</br>
+
+<div style="display: flex; justify-content: space-between; width: 100%; box-sizing: border-box; border-top: 1px solid;position: absolute; bottom: 0; padding: 10px; ">
+    <small style="display: flex; flex-direction: column;">
+        <small>
+            Version
+            <script>document.write(VERSION);</script>,
+            Node
+            <script>document.write(process.versions.node);</script>,
+            Electron
+            <script>document.write(process.versions.electron);</script>
+        </small>
+        <small>
+            Chrome
+            <script>document.write(process.versions.chrome);</script>
+            on OS
+            <script>document.write(process.platform);</script>
+
+        </small>
+    </small>
+    <small style="display: flex; flex-direction: column; justify-content: center">
+        <small>
+            To reset click "Cmnd / Ctrl + R"
+        </small>
+        <small style="align-self: flex-end">@kosiakMD</small>
+    </small>
+
+</div>
+
+
+</body>
+<script>
+  const ipcRenderer = require('electron').ipcRenderer;
+
+  window.onload = function (e) {
+    const updateBtn = document.getElementById('update');
+    const downloadBtn = document.getElementById('download');
+
+    ipcRenderer.on('done', (e, data1, data2) => {
+      downloadBtn.style.visibility = 'visible';
+      // console.log('Done', data1);
+      // console.log('Done', data2);
+      alert('Done!');
+    });
+    ipcRenderer.on('count', (e, count) => {
+      console.log('count', count);
+      document.getElementById('count').innerText = count;
+    });
+    ipcRenderer.on('status', (e, status) => {
+      console.log('status', status);
+      document.getElementById('status').innerText = status;
+    });
+
+    updateBtn.addEventListener('click', () => {
+      downloadBtn.style.visibility = 'hidden';
+      document.getElementById('count').innerText = '';
+      document.getElementById('status').innerText = '';
+      ipcRenderer.send('getPrices');
+    });
+    downloadBtn.addEventListener('click', () => {
+      ipcRenderer.send('downloadFile');
+    });
+
+
+    if (__DEV__) {
+      downloadBtn.style.visibility = 'visible';
+    }
+  };
+</script>
+
+</body>
+</html>
