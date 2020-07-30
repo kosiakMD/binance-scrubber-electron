@@ -6,7 +6,6 @@ global.ENV = { __DEV__, VERSION: app.getVersion() };
 const URI = 'https://api.binance.com';
 const apiKey = '140493oEKy9fmAzF8qY4trdc7wkNPtXwMFfuuf65x4o35BtgMontGV40kJDd8783';
 const secretKey = 'NLrN6IDMPsQg1kVP4kHWr95rw6LF7faWSnr5GnfTfVhTjc1g7aUePqw9OfTyBBxW';
-const defaultSymbol = 'USDT';
 const filePath = '__temp';
 const fileName = 'Binance';
 const fileExtension = 'xlsx';
